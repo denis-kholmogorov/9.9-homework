@@ -24,6 +24,8 @@ public class CSVReader {
             {
                 String[] fragments = line.split(",", 8);
 
+                income = income + Double.parseDouble(fragments[6]);
+
                 try
                 {
                     localExpenses = Double.parseDouble(fragments[7]);
@@ -36,25 +38,25 @@ public class CSVReader {
                     expenses = expenses + localExpenses;
                 }
 
-                income = income + Double.parseDouble(fragments[6]);
 
-                String[] a = fragments[5].split("    ",3);
+                String[] a = fragments[5].split("        ",2);
 
-                if(a[1].matches(".+\\\\.+"))
+                if(a[0].matches(".+\\\\.+"))
                 {
-                    String[] b = a[1].split("\\\\");
-                    String key = b[b.length-1].strip();
-                    if(!map.containsKey(key))
-                    {
-                        map.put(key, localExpenses);
-                    }
-                    else
+                    String key = a[0].substring(a[0].lastIndexOf("\\")+1).strip();
+                    System.out.println(key);
+                    if(map.containsKey(key))
                     {
                         map.put(key, map.get(key) + localExpenses);
                     }
+                    else
+                    {
+                        map.put(key, localExpenses);
+                    }
                 }
             }
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -63,6 +65,6 @@ public class CSVReader {
         {
             System.out.println("Расходавано на " + key + " --- " + map.get(key) + " руб");
         }
-        System.out.println("Общий доход - " + income + "\nОбщий расход - " + expenses);
+        System.out.println("Общий доход - " + income + " руб\nОбщий расход - " + expenses + " руб");
     }
 }
